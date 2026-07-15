@@ -3,6 +3,7 @@ info:
   title: MAVULA Workbench API
   version: 1.0.0
   description: Authenticated job submission and operational status surface.
+  license: { name: GNU Affero General Public License v3.0 only, identifier: AGPL-3.0-only }
 servers:
   - url: https://workbench.mavula.dev
 security: [{ bearerAuth: [] }]

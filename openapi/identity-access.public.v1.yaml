@@ -3,6 +3,7 @@ info:
   title: MAVULA Identity Access API
   version: 1.0.0
   description: Institutional OAuth 2.0 and OpenID Connect authorization surface.
+  license: { name: GNU Affero General Public License v3.0 only, identifier: AGPL-3.0-only }
 servers:
   - url: https://identity.mavula.dev
 security: []

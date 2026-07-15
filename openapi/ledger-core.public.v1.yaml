@@ -3,6 +3,7 @@ info:
   title: MAVULA Ledger Core API
   version: 1.0.0
   description: Tenant-scoped accounts, financial controls, configuration and projection APIs.
+  license: { name: GNU Affero General Public License v3.0 only, identifier: AGPL-3.0-only }
 servers:
   - url: https://ledger.mavula.dev
 security: [{ bearerAuth: [] }]
