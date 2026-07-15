@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 
 const contracts = [
@@ -8,10 +8,15 @@ const contracts = [
 ];
 rmSync('dist', { recursive: true, force: true });
 mkdirSync('dist', { recursive: true });
+mkdirSync('dist/guides', { recursive: true });
 for (const [source, output] of contracts) {
   run(['lint', `openapi/${source}`]);
   run(['build-docs', `openapi/${source}`, '--output', `dist/${output}`]);
 }
+copyFileSync('guides/legacy-batches.html', 'dist/guides/legacy-batches.html');
+writeFileSync('dist/.nojekyll', '');
+const revision = spawnSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).stdout.trim() || 'unknown';
+writeFileSync('dist/build-info.json', `${JSON.stringify({ revision, generated_at: new Date().toISOString() }, null, 2)}\n`);
 writeFileSync('dist/index.html', `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MAVULA API Reference</title><style>
@@ -23,6 +28,7 @@ a:hover strong{text-decoration:underline}small{color:#68717a}@media(max-width:62
 <a href="identity-access.html"><strong>Identity Access</strong><small>OAuth 2.0, OpenID Connect and effective operator identity</small><span>›</span></a>
 <a href="ledger-core.html"><strong>Ledger Core</strong><small>Accounts, financial controls, configuration and projections</small><span>›</span></a>
 <a href="workbench.html"><strong>Workbench</strong><small>Jobs and authenticated operational status</small><span>›</span></a>
+<a href="guides/legacy-batches.html"><strong>Legacy batches</strong><small>Regulatory exports, validation-only imports and durable receipts</small><span>›</span></a>
 </section></main></body></html>`);
 
 function run(args) {

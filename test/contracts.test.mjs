@@ -11,3 +11,13 @@ test('all published operations use unique operationId values', () => {
   assert.equal(new Set(operationIds).size, operationIds.length);
   assert.ok(operationIds.length > 20);
 });
+
+test('legacy batch guide links to the public owner contract', () => {
+  const guide = readFileSync('guides/legacy-batches.html', 'utf8');
+  const workbench = readFileSync('openapi/workbench.public.v1.yaml', 'utf8');
+  assert.match(guide, /imports are staged and validated only/i);
+  assert.match(guide, /\.\.\/workbench\.html/);
+  for (const route of ['/api/regulatory-exports', '/api/legacy-imports', '/api/legacy-batches/{batchId}/artifact']) {
+    assert.ok(workbench.includes(route), `missing documented route ${route}`);
+  }
+});

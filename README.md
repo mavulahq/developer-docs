@@ -6,6 +6,9 @@ The repository publishes approved Identity Access, Ledger Core and Workbench
 interfaces. Internal callbacks, health checks and observability endpoints are
 excluded from the public reference.
 
+The legacy batch guide documents regulatory export generation, validation-only
+imports, durable receipts, delivery registration and operator recovery.
+
 ## Contracts
 
 - `identity-access.public.v1.yaml`
