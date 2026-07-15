@@ -1,0 +1,20 @@
+---
+title: Projections
+description: Read derived views while preserving financial ownership and consistency expectations.
+---
+
+Projections are read models derived from committed domain events. API v1 exposes loan activity, ledger activity and product publication views together with projection checkpoints.
+
+## Consistency model
+
+A successful command may become visible in a projection after a short delay. The command response or authoritative aggregate remains the source for immediate confirmation; projections support operational search and reporting.
+
+Read `/api/projections/status` to inspect the last processed event and lag for each projection. Alerting should consider sustained lag, not a single transient value.
+
+## Safe consumption
+
+- Store the returned projection version or last event identifier when incremental reconciliation matters.
+- Do not post financial entries from a projection record.
+- Re-read by entity ID when a list result may have been produced before a recent command.
+- Treat a projection payload as a versioned public representation, not the internal event stream.
+

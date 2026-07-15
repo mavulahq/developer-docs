@@ -1,0 +1,25 @@
+---
+title: Tenant isolation
+description: Understand how identity context and row-level security isolate institutional data.
+---
+
+The authenticated identity establishes the tenant boundary. Application authorization and PostgreSQL row-level security enforce that boundary independently.
+
+## Request path
+
+1. Identity Access validates credentials and issues a tenant-bound token.
+2. The API validates token signature, issuer, audience and expiry.
+3. Effective roles and permissions are resolved for that tenant.
+4. The database transaction receives the tenant context.
+5. Row-level security filters reads and rejects cross-tenant writes.
+
+Identifiers are not authorization. Knowing another tenant's account, request or batch identifier must not make it readable.
+
+## Integration rules
+
+- Use one tenant-bound credential per institutional context.
+- Never cache data without including the effective tenant in the cache key.
+- Do not accept a tenant identifier from an untrusted client and forward it as authorization context.
+- Treat `404` for a known identifier as potentially intentional boundary protection.
+- Propagate correlation IDs, not credentials, across logs and support workflows.
+

@@ -1,0 +1,31 @@
+---
+title: Code examples
+description: Reusable request patterns and a Postman collection for MAVULA API v1.
+---
+
+The guides include executable fragments for curl, TypeScript, Python, Java and Go. All clients should centralize token acquisition, correlation IDs, idempotency keys, bounded retries and structured error handling.
+
+## Client checklist
+
+| Concern | Implementation |
+| --- | --- |
+| Secrets | Runtime secret store or environment injection |
+| HTTP timeout | Explicit connect and response deadlines |
+| Money | Decimal or arbitrary-precision type; serialize as a string |
+| Retries | Bounded exponential backoff with jitter |
+| Mutations | Stable idempotency key per logical command |
+| Tracing | Propagate `X-Correlation-ID` |
+| Logs | Redact bearer tokens, secrets and regulated personal data |
+
+## Postman
+
+The repository includes a versioned collection at [`examples/postman/MAVULA-API-v1.postman_collection.json`](https://github.com/mavulahq/developer-docs/blob/main/examples/postman/MAVULA-API-v1.postman_collection.json). Define `identity_base_url`, `ledger_base_url`, `workbench_base_url`, `client_id`, `client_secret` and `access_token` in a private Postman environment.
+
+## Reference contracts
+
+- [Identity Access OpenAPI](/developer-docs/openapi/identity-access.public.v1.yaml)
+- [Ledger Core OpenAPI](/developer-docs/openapi/ledger-core.public.v1.yaml)
+- [Workbench OpenAPI](/developer-docs/openapi/workbench.public.v1.yaml)
+
+Use these contracts to generate clients in your preferred language. Pin the downloaded contract digest in regulated build pipelines.
+

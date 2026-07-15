@@ -1,0 +1,16 @@
+---
+title: Current limitations
+description: Explicit boundaries of the currently published MAVULA API v1 surface.
+---
+
+API v1 documents implemented public interfaces only. The following boundaries are intentional:
+
+- Legacy imports are staged and validated but do not mutate financial state.
+- Payment process state does not directly create ledger postings.
+- Internal callbacks, health probes, metrics and administrative runtime endpoints are excluded.
+- The documentation site does not provide a live request console or retain credentials.
+- Projection reads are eventually consistent and are not a substitute for authoritative command results.
+- SDK packages are not yet published; examples use standard language HTTP clients.
+
+Proposed events or interfaces remain outside the public reference until their ownership, idempotency, failure behavior and compatibility guarantees are approved.
+

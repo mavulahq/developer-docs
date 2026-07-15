@@ -1,0 +1,25 @@
+---
+title: Idempotency and retries
+description: Prevent duplicate effects across network failures and asynchronous processing.
+---
+
+An idempotency key identifies one logical mutation within its tenant and operation boundary. The server persists a receipt that binds the key to the request fingerprint and result.
+
+## Correct use
+
+```text
+first attempt:  POST /api/accounts + key A + payload P
+timed-out retry: POST /api/accounts + key A + payload P
+new command:    POST /api/accounts + key B + payload Q
+```
+
+Changing the method, path or body while reusing a key produces a conflict. Generating a new key after an ambiguous timeout risks creating a duplicate command.
+
+## Durable receipts
+
+Receipts allow a retried request to return the original accepted or completed result after a process restart. For asynchronous jobs, the receipt identifies the same job; clients must then follow the job or batch status resource.
+
+## Retry budget
+
+Use exponential backoff with jitter and a finite attempt count. Preserve the correlation ID across the end-to-end business flow. A later manual retry after investigation may use a new correlation ID, but it must not reuse an idempotency key for a different command.
+
