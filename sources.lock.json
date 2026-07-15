@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "contracts": [
+    {
+      "file": "identity-access.public.v1.yaml",
+      "owner": "mavulahq/identity-access",
+      "source": "contracts/openapi/identity-access.public.v1.yaml",
+      "sha256": "4f2d1fc99a5cdbc978d1076688ec28eb8330697ce2298ede6cb2173c6ced0312"
+    },
+    {
+      "file": "ledger-core.public.v1.yaml",
+      "owner": "mavulahq/ledger-core",
+      "source": "contracts/openapi/ledger-core.public.v1.yaml",
+      "sha256": "9dcd05f603df109c40e00c411a2299da8672b84a22fc521da1b68034263179e3"
+    },
+    {
+      "file": "workbench.public.v1.yaml",
+      "owner": "mavulahq/workbench",
+      "source": "contracts/openapi/workbench.public.v1.yaml",
+      "sha256": "4323f267c259759abc342721f5624600461e8db8b1ee9e9c3ad0ea6741e5e57a"
+    }
+  ]
+}

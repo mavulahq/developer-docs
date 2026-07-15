@@ -7,7 +7,8 @@ const required = [
   '.agents/AGENTS.md', '.agents/skills/mavula-review/SKILL.md',
   '.agents/skills/mavula-review/agents/openai.yaml', '.github/CODEOWNERS',
   '.github/PULL_REQUEST_TEMPLATE.md', '.github/workflows/guardian.yml',
-  'LICENSE', 'README.md', 'package.json',
+  '.github/workflows/required-ci.yml', '.github/workflows/pages.yml',
+  'LICENSE', 'README.md', 'package.json', 'sources.lock.json', 'redocly.yaml',
 ];
 for (const file of required) if (!existsSync(file)) failures.push(`${file} is required`);
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
