@@ -8,7 +8,7 @@ Configuration APIs are tenant-scoped. Apply changes first in a non-production te
 ## Generate jurisdiction defaults
 
 ```bash
-curl -sS -X POST https://ledger.mavula.io/api/products/config/generate \
+curl -sS -X POST https://ledger.mavula.dev/api/products/config/generate \
   -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
   -H 'Content-Type: application/json' \
   -H 'Idempotency-Key: 4cb0de72-2805-4490-8e47-df403c118275' \

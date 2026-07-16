@@ -12,7 +12,7 @@ Authorization follows least privilege and separation of duties. A role grants a 
 | `operations_viewer` | Read operational and financial state | `finance.read` |
 | `operations_maker` | Submit controlled changes | `finance.read`, `finance.write` |
 | `operations_checker` | Approve or reject controlled changes | `finance.read`, `finance.approve` |
-| `compliance_officer` | Review and generate regulated outputs | `finance.read`, `compliance.read`, `compliance.write` |
+| `compliance_officer` | Review and generate regulated outputs | `finance.read`, `compliance.manage` |
 | `platform_administrator` | Manage tenant configuration and access | Explicit administrative permissions only |
 | `service_integration` | Execute a specific machine workflow | Narrow scopes for one integration |
 
@@ -23,9 +23,8 @@ The principal that submits an account lifecycle or financial adjustment request 
 ## Verify access at runtime
 
 ```bash
-curl -sS https://identity.mavula.io/api/v1/me \
+curl -sS https://identity.mavula.dev/api/v1/me \
   -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
 ```
 
 Treat a `403` as an authorization decision. Do not retry it automatically or exchange it for a more privileged service credential.
-

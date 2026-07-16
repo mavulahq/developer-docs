@@ -23,7 +23,7 @@ import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
     <Tabs>
       <TabItem label="curl">
         ```bash
-        curl -sS -X POST https://ledger.mavula.io/api/accounts/ACCOUNT_ID/status-transitions \
+        curl -sS -X POST https://ledger.mavula.dev/api/accounts/ACCOUNT_ID/status-transitions \
           -H "Authorization: Bearer $MAKER_TOKEN" \
           -H 'Content-Type: application/json' \
           -H 'Idempotency-Key: 7f2b1e3a-4c2d-4d63-9b1a-2f7b6c0d5e91' \
@@ -83,7 +83,7 @@ import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
 ## Approve as a different operator
 
 ```bash
-curl -sS -X POST https://ledger.mavula.io/api/account-lifecycle-requests/REQUEST_ID/approve \
+curl -sS -X POST https://ledger.mavula.dev/api/account-lifecycle-requests/REQUEST_ID/approve \
   -H "Authorization: Bearer $CHECKER_TOKEN" \
   -H 'Content-Type: application/json' \
   -H 'Idempotency-Key: a65e192f-aa5f-4dc9-a111-baf6136595a0' \

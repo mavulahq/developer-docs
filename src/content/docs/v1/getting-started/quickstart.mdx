@@ -1,29 +1,30 @@
 ---
 title: Quickstart
-description: Obtain a service token, create an account and read its balance.
+description: Exchange an operator authorization code, create an account and read its balance.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-This flow uses the OAuth 2.0 client credentials grant for a trusted institutional backend.
+This flow uses OAuth 2.0 authorization code with PKCE for an institutional operator. Complete the authorization redirect described in [Authentication](../authentication/) before exchanging the code.
 
 <Steps>
 
-1. **Request a token**
+1. **Exchange the authorization code**
 
    ```bash
-   curl -sS -X POST https://identity.mavula.io/token \
+   curl -sS -X POST https://identity.mavula.dev/token \
      -H 'Content-Type: application/x-www-form-urlencoded' \
-     --data-urlencode 'grant_type=client_credentials' \
-     --data-urlencode 'client_id=YOUR_CLIENT_ID' \
-     --data-urlencode 'client_secret=YOUR_CLIENT_SECRET' \
-     --data-urlencode 'scope=openid finance.read finance.write'
+     --data-urlencode 'grant_type=authorization_code' \
+     --data-urlencode 'client_id=operator-console' \
+     --data-urlencode 'code=AUTHORIZATION_CODE' \
+     --data-urlencode 'redirect_uri=https://ops.example.com/callback' \
+     --data-urlencode 'code_verifier=ORIGINAL_CODE_VERIFIER'
    ```
 
 2. **Inspect the effective identity**
 
    ```bash
-   curl -sS https://identity.mavula.io/api/v1/me \
+   curl -sS https://identity.mavula.dev/api/v1/me \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
    ```
 
@@ -32,7 +33,7 @@ This flow uses the OAuth 2.0 client credentials grant for a trusted institutiona
 3. **Create an account**
 
    ```bash
-   curl -sS -X POST https://ledger.mavula.io/api/accounts \
+   curl -sS -X POST https://ledger.mavula.dev/api/accounts \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
      -H 'Content-Type: application/json' \
      -H 'Idempotency-Key: 76b05d81-c975-4daf-b054-72b2eb3a749a' \
@@ -43,15 +44,15 @@ This flow uses the OAuth 2.0 client credentials grant for a trusted institutiona
 4. **Read the balance**
 
    ```bash
-   curl -sS https://ledger.mavula.io/api/accounts/ACCOUNT_ID/balance \
+   curl -sS https://ledger.mavula.dev/api/accounts/ACCOUNT_ID/balance \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
      -H 'X-Correlation-ID: 406d8359-a53a-4d2a-a908-628798ece3b3'
    ```
 
 </Steps>
 
-<Aside type="caution" title="Production credentials">
-Store client secrets in a managed secret store. Never place credentials in source control, browser applications, logs or support requests.
+<Aside type="caution" title="Token handling">
+Keep access tokens in memory, rotate refresh tokens atomically and never place tokens or authorization codes in source control, logs or support requests.
 </Aside>
 
 ## Next steps

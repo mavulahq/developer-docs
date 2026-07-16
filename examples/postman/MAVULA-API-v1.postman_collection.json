@@ -5,9 +5,9 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "identity_base_url", "value": "https://identity.mavula.io" },
-    { "key": "ledger_base_url", "value": "https://ledger.mavula.io" },
-    { "key": "workbench_base_url", "value": "https://workbench.mavula.io" },
+    { "key": "identity_base_url", "value": "https://identity.mavula.dev" },
+    { "key": "ledger_base_url", "value": "https://ledger.mavula.dev" },
+    { "key": "workbench_base_url", "value": "https://workbench.mavula.dev" },
     { "key": "access_token", "value": "" },
     { "key": "account_id", "value": "" },
     { "key": "request_id", "value": "" }

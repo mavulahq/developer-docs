@@ -32,7 +32,22 @@ test('portal covers identity, financial controls, payments and reliability', () 
     'src/content/docs/v1/concepts/idempotency.mdx',
   ];
   const content = files.map((file) => readFileSync(file, 'utf8')).join('\n');
-  for (const expectation of ['client_credentials', 'operations_maker', 'REVERSAL', 'PAYMENT_PROCESS', 'idempotency key']) {
+  for (const expectation of ['internal.worker', 'operations_maker', 'REVERSAL', 'PAYMENT_CAPTURE', 'idempotency key']) {
+    assert.match(content, new RegExp(expectation, 'i'));
+  }
+});
+
+test('published examples use canonical hosts and contract payload names', () => {
+  const files = [
+    'src/content/docs/v1/getting-started/quickstart.mdx',
+    'src/content/docs/v1/getting-started/roles-permissions.mdx',
+    'src/content/docs/v1/guides/payment-jobs.mdx',
+    'src/content/docs/v1/guides/legacy-batches.mdx',
+    'examples/postman/MAVULA-API-v1.postman_collection.json',
+  ];
+  const content = files.map((file) => readFileSync(file, 'utf8')).join('\n');
+  assert.doesNotMatch(content, /https:\/\/(?:identity|ledger|workbench)\.mavula\.io/);
+  for (const expectation of ['mavula.dev', 'compliance.manage', 'valueMinor', 'period_from', 'authority_reference']) {
     assert.match(content, new RegExp(expectation, 'i'));
   }
 });

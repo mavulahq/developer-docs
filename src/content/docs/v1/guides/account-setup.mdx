@@ -12,7 +12,7 @@ Required permission: `finance.write` to create, `finance.read` to inspect.
 1. **Create the account**
 
    ```bash
-   curl -sS -X POST https://ledger.mavula.io/api/accounts \
+   curl -sS -X POST https://ledger.mavula.dev/api/accounts \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
      -H 'Content-Type: application/json' \
      -H 'Idempotency-Key: 56a1f534-9054-4dcf-82cb-55ebc102da18' \
@@ -23,14 +23,14 @@ Required permission: `finance.write` to create, `finance.read` to inspect.
 2. **Read the current balance**
 
    ```bash
-   curl -sS https://ledger.mavula.io/api/accounts/ACCOUNT_ID/balance \
+   curl -sS https://ledger.mavula.dev/api/accounts/ACCOUNT_ID/balance \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
    ```
 
 3. **Page through the statement**
 
    ```bash
-   curl -sS 'https://ledger.mavula.io/api/accounts/ACCOUNT_ID/statement?limit=100' \
+   curl -sS 'https://ledger.mavula.dev/api/accounts/ACCOUNT_ID/statement?limit=100' \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
    ```
 
