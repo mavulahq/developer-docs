@@ -1,0 +1,34 @@
+---
+title: Control a financial adjustment
+description: Reverse or correct a posted financial effect through maker-checker approval.
+---
+
+Financial history is not edited in place. Submit a `REVERSAL` or `CORRECTION` against a transaction or journal entry, then have a different operator approve it.
+
+## Submit a reversal
+
+```bash
+curl -sS -X POST https://ledger.mavula.dev/api/financial-adjustment-requests \
+  -H "Authorization: Bearer $MAKER_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -H 'Idempotency-Key: 7b0491f2-eb4c-42b2-b77d-acadd27c571b' \
+  -H 'X-Correlation-ID: 2d94d70b-77fa-4a58-af9f-d49c6849632f' \
+  -d '{"target_type":"JOURNAL_ENTRY","target_id":"journal_001","adjustment_type":"REVERSAL","reason":"Duplicate posting"}'
+```
+
+## Approve or reject
+
+```bash
+curl -sS -X POST https://ledger.mavula.dev/api/financial-adjustment-requests/REQUEST_ID/approve \
+  -H "Authorization: Bearer $CHECKER_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -H 'Idempotency-Key: 147598a5-10ee-49cc-b6e5-e5415bb65844' \
+  -d '{"reason":"Source documents verified"}'
+```
+
+Use `/reject` with a required reason when the evidence is insufficient. After approval, read the request until its applied or failed state is visible, then reconcile the resulting statement entries.
+
+## Correction payloads
+
+A correction may carry lending and journal details defined by the public schema. Validate debit and credit totals, account currency and source references before submission. Never retry with changed correction lines under the same idempotency key.
+

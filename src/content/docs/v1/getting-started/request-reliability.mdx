@@ -1,0 +1,41 @@
+---
+title: Request reliability
+description: Correlate requests and retry mutations without creating duplicate financial effects.
+---
+
+## Required headers
+
+| Header | Applies to | Requirement |
+| --- | --- | --- |
+| `Authorization` | Protected operations | Bearer access token |
+| `Idempotency-Key` | Mutating operations | Stable UUID for one logical command |
+| `X-Correlation-ID` | Every integration call | Stable trace identifier across service boundaries |
+| `Content-Type` | Requests with a body | `application/json` or the media type required by the endpoint |
+
+Generate a new idempotency key for each logical command. Reuse the same key only when retrying the same method, path and payload.
+
+## Retry policy
+
+| Result | Retry | Action |
+| --- | --- | --- |
+| Network timeout before response | Yes | Retry with the same idempotency key |
+| `429` | Yes | Respect `Retry-After` and add jitter |
+| `500`, `502`, `503`, `504` | Yes | Exponential backoff with a bounded attempt count |
+| `400`, `401`, `403`, `404`, `409` | No | Correct credentials, payload, state or key usage |
+| Accepted asynchronous job | Poll | Read the status resource; do not resubmit |
+
+## Example retry loop
+
+```ts
+const retryable = new Set([429, 500, 502, 503, 504]);
+for (let attempt = 0; attempt < 4; attempt += 1) {
+  const response = await fetch(url, { method: 'POST', headers, body });
+  if (response.ok) return response.json();
+  if (!retryable.has(response.status)) throw await response.json();
+  await new Promise((resolve) => setTimeout(resolve, 250 * 2 ** attempt + Math.random() * 100));
+}
+throw new Error('retry budget exhausted');
+```
+
+See [Idempotency and retries](../concepts/idempotency/) for receipt and conflict semantics.
+

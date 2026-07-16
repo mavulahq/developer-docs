@@ -1,0 +1,30 @@
+---
+title: API v1 overview
+description: Public integration boundaries and operational expectations for MAVULA API v1.
+---
+
+MAVULA API v1 separates identity, financial state and asynchronous operations into explicit service boundaries. Obtain an access token from Identity Access, call Ledger Core for financial domain operations, and use Workbench for operational jobs and legacy batches.
+
+## Service map
+
+| API | Base URL | Interaction model |
+| --- | --- | --- |
+| Identity Access | `https://identity.mavula.dev` | OAuth 2.0 and OpenID Connect |
+| Ledger Core | `https://ledger.mavula.dev` | Synchronous commands and reads |
+| Workbench | `https://workbench.mavula.dev` | Asynchronous jobs and operational reads |
+
+Tenant scope is derived from the authenticated identity. Do not send a tenant selector in the URL or body unless a specific operation schema requires it.
+
+## Integration contract
+
+Every protected request uses a bearer token. Mutating requests also use `Idempotency-Key`; all requests should send `X-Correlation-ID`. Monetary values are decimal strings and currencies are ISO 4217 uppercase codes.
+
+```http
+Authorization: Bearer eyJ...
+Idempotency-Key: 76b05d81-c975-4daf-b054-72b2eb3a749a
+X-Correlation-ID: 406d8359-a53a-4d2a-a908-628798ece3b3
+Content-Type: application/json
+```
+
+Start with the [quickstart](./getting-started/quickstart/) or select a workflow from the sidebar.
+

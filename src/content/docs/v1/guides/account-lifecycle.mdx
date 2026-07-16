@@ -1,0 +1,105 @@
+---
+title: Control an account lifecycle
+description: Submit freeze, unfreeze and close requests with maker-checker approval.
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+<div class="workflow-grid">
+  <div class="workflow-steps">
+    <div class="workflow-step"><h3>Create an account</h3><p>Create the account that will be managed by the lifecycle workflow.</p></div>
+    <div class="workflow-step"><h3>Submit a transition</h3><p>An <code>operations_maker</code> records a request in <code>PENDING_APPROVAL</code>.</p></div>
+    <div class="workflow-step"><h3>Approve separately</h3><p>A different <code>operations_checker</code> approves or rejects the request.</p></div>
+    <div class="workflow-step"><h3>Verify state</h3><p>Read the request and account to confirm the applied transition.</p></div>
+  </div>
+  <div>
+    <h2 id="role-matrix">Role matrix</h2>
+    <div class="role-matrix">
+      <div><strong>operations_maker</strong><span>Create accounts</span><span>Submit lifecycle requests</span><span>Read own requests</span></div>
+      <div><strong>operations_checker</strong><span>Review pending requests</span><span>Approve or reject requests</span><span>Read all requests</span></div>
+    </div>
+
+    <h2 id="submit">Submit a freeze request</h2>
+    <Tabs>
+      <TabItem label="curl">
+        ```bash
+        curl -sS -X POST https://ledger.mavula.dev/api/accounts/ACCOUNT_ID/status-transitions \
+          -H "Authorization: Bearer $MAKER_TOKEN" \
+          -H 'Content-Type: application/json' \
+          -H 'Idempotency-Key: 7f2b1e3a-4c2d-4d63-9b1a-2f7b6c0d5e91' \
+          -H 'X-Correlation-ID: 0f3c8d7a-6e1b-4a98-8d7f-9c1a2b3d4e5f' \
+          -d '{"transition":"FREEZE","reason":"Suspected fraud"}'
+        ```
+      </TabItem>
+      <TabItem label="TypeScript">
+        ```ts
+        const response = await fetch(`${ledgerUrl}/api/accounts/${accountId}/status-transitions`, {
+          method: 'POST',
+          headers: {
+            authorization: `Bearer ${makerToken}`,
+            'content-type': 'application/json',
+            'idempotency-key': crypto.randomUUID(),
+            'x-correlation-id': crypto.randomUUID(),
+          },
+          body: JSON.stringify({ transition: 'FREEZE', reason: 'Suspected fraud' }),
+        });
+        ```
+      </TabItem>
+      <TabItem label="Python">
+        ```python
+        response = requests.post(
+            f"{ledger_url}/api/accounts/{account_id}/status-transitions",
+            headers={"Authorization": f"Bearer {maker_token}", "Idempotency-Key": str(uuid.uuid4()), "X-Correlation-ID": str(uuid.uuid4())},
+            json={"transition": "FREEZE", "reason": "Suspected fraud"}, timeout=10,
+        )
+        response.raise_for_status()
+        ```
+      </TabItem>
+      <TabItem label="Java">
+        ```java
+        HttpRequest request = HttpRequest.newBuilder(URI.create(ledgerUrl + "/api/accounts/" + accountId + "/status-transitions"))
+            .header("Authorization", "Bearer " + makerToken)
+            .header("Content-Type", "application/json")
+            .header("Idempotency-Key", UUID.randomUUID().toString())
+            .header("X-Correlation-ID", UUID.randomUUID().toString())
+            .POST(HttpRequest.BodyPublishers.ofString("{\"transition\":\"FREEZE\",\"reason\":\"Suspected fraud\"}"))
+            .build();
+        ```
+      </TabItem>
+      <TabItem label="Go">
+        ```go
+        body := strings.NewReader(`{"transition":"FREEZE","reason":"Suspected fraud"}`)
+        req, _ := http.NewRequest(http.MethodPost, ledgerURL+"/api/accounts/"+accountID+"/status-transitions", body)
+        req.Header.Set("Authorization", "Bearer "+makerToken)
+        req.Header.Set("Content-Type", "application/json")
+        req.Header.Set("Idempotency-Key", uuid.NewString())
+        req.Header.Set("X-Correlation-ID", uuid.NewString())
+        ```
+      </TabItem>
+    </Tabs>
+  </div>
+</div>
+
+## Approve as a different operator
+
+```bash
+curl -sS -X POST https://ledger.mavula.dev/api/account-lifecycle-requests/REQUEST_ID/approve \
+  -H "Authorization: Bearer $CHECKER_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -H 'Idempotency-Key: a65e192f-aa5f-4dc9-a111-baf6136595a0' \
+  -d '{"reason":"Evidence reviewed"}'
+```
+
+<Aside type="caution" title="Self-approval is rejected">
+The maker and checker must be distinct effective operators. A `403` is returned when the submitting principal attempts to approve its own request.
+</Aside>
+
+## Failure handling
+
+| HTTP status | Meaning | Resolution |
+| --- | --- | --- |
+| `400` | Invalid transition or malformed body | Validate transition and reason |
+| `403` | Missing permission or self-approval | Use a distinct checker with `finance.approve` |
+| `404` | Account or request not found in the tenant | Verify identifiers and tenant context |
+| `409` | Idempotency or state conflict | Reuse the key only for an identical retry; refresh current state |
+

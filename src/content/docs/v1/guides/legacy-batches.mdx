@@ -1,0 +1,55 @@
+---
+title: Run legacy and regulatory batches
+description: Generate regulatory exports, validate legacy imports and retain durable receipts.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Workbench orchestrates auditable batch requests. Legacy imports are staged and validated only; they do not mutate financial state in API v1.
+
+## Regulatory export
+
+<Steps>
+
+1. **Request the export**
+
+   ```bash
+   curl -sS -X POST https://workbench.mavula.dev/api/regulatory-exports \
+     -H "Authorization: Bearer $COMPLIANCE_TOKEN" \
+     -H 'Content-Type: application/json' \
+     -H 'Idempotency-Key: 0e03ef93-09e0-413f-b49a-e59f93fa881f' \
+     -H 'X-Correlation-ID: bd351e46-e436-4dd2-b9de-75e940629961' \
+     -d '{"period_from":"2026-06-01","period_to":"2026-06-30","legal_basis_code":"MZ-AML-14-2023-ART-43","retention_until":"2036-06-30"}'
+   ```
+
+2. **Read the durable batch receipt**
+
+   Use `GET /api/legacy-batches/{batchId}`. The receipt survives worker retries and process restarts.
+
+3. **Download the artifact**
+
+   Use `GET /api/legacy-batches/{batchId}/artifact` only after the batch reports a completed state. Verify the response media type and checksum before delivery.
+
+4. **Record authority delivery**
+
+   ```bash
+   curl -sS -X POST https://workbench.mavula.dev/api/regulatory-exports/BATCH_ID/delivery \
+     -H "Authorization: Bearer $COMPLIANCE_TOKEN" \
+     -H 'Content-Type: application/json' \
+     -H 'Idempotency-Key: 076a329b-84f5-4f58-99ef-04ac14f3a343' \
+     -d '{"authority_reference":"BM-2026-000184","delivered_at":"2026-07-10T09:30:00Z"}'
+   ```
+
+</Steps>
+
+## Validate a legacy import
+
+Submit the file metadata and import parameters to `POST /api/legacy-imports`. Inspect deterministic validation failures at `GET /api/legacy-batches/{batchId}/rejections`.
+
+<Aside type="caution" title="No financial mutation">
+Validation acceptance does not post transactions, create accounts or alter ledger balances. A separate approved migration process is required for financial effects.
+</Aside>
+
+## Recovery
+
+List batches to locate a lost client receipt, then read the specific batch. Retry a timed-out submission with the original idempotency key and identical payload. Never create a second export merely because the client did not receive the first response.

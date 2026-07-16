@@ -1,0 +1,97 @@
+:root {
+  --sl-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --sl-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --sl-color-accent-low: #fff1e8;
+  --sl-color-accent: #ef5b0c;
+  --sl-color-accent-high: #8d2d00;
+  --sl-color-white: #071a45;
+  --sl-color-gray-1: #18284d;
+  --sl-color-gray-2: #405071;
+  --sl-color-gray-3: #68748b;
+  --sl-color-gray-4: #a7afbe;
+  --sl-color-gray-5: #dbe0e8;
+  --sl-color-gray-6: #eef1f5;
+  --sl-color-black: #ffffff;
+  --sl-nav-height: 4.25rem;
+  --sl-sidebar-width: 15rem;
+  --sl-content-width: 58rem;
+  --sl-text-h1: 2.25rem;
+  --sl-text-h2: 1.45rem;
+  --sl-text-h3: 1.08rem;
+}
+
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #54230b;
+  --sl-color-accent: #ff7a2f;
+  --sl-color-accent-high: #ffd4bc;
+  --sl-color-white: #f7f9fc;
+  --sl-color-gray-1: #dfe5ef;
+  --sl-color-gray-2: #b9c2d2;
+  --sl-color-gray-3: #8792a7;
+  --sl-color-gray-4: #526078;
+  --sl-color-gray-5: #2b3850;
+  --sl-color-gray-6: #17233a;
+  --sl-color-black: #071225;
+}
+
+html { letter-spacing: 0; }
+body { background: var(--sl-color-black); }
+.header { border-bottom: 1px solid var(--sl-color-gray-5); box-shadow: none; }
+.site-title { color: #071a45; font-weight: 750; gap: .55rem; }
+:root[data-theme='dark'] .site-title { color: #f7f9fc; }
+.site-title::before {
+  content: 'M.';
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 2px solid currentColor;
+  border-radius: .45rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+.sidebar-pane { border-inline-end: 1px solid var(--sl-color-gray-5); }
+.sidebar-content { padding-top: 1.25rem; }
+.sidebar-content summary { font-size: .72rem; text-transform: uppercase; letter-spacing: 0; color: var(--sl-color-gray-3); }
+.sidebar-content a { border-radius: 4px; font-size: .88rem; }
+.sidebar-content a[aria-current='page'] { color: var(--sl-color-accent); background: var(--sl-color-accent-low); font-weight: 650; }
+.main-pane { min-width: 0; }
+.content-panel { padding-top: 2.5rem; }
+.sl-markdown-content h1, .sl-markdown-content h2, .sl-markdown-content h3 { letter-spacing: 0; color: var(--sl-color-white); }
+.sl-markdown-content h1 { line-height: 1.12; }
+.sl-markdown-content p, .sl-markdown-content li { line-height: 1.65; }
+.sl-markdown-content code:not(pre code) { border-radius: 3px; padding: .15rem .35rem; }
+.sl-markdown-content table { display: table; width: 100%; font-size: .86rem; }
+.sl-markdown-content th { background: var(--sl-color-gray-6); color: var(--sl-color-white); }
+.sl-markdown-content th, .sl-markdown-content td { border-color: var(--sl-color-gray-5); padding: .7rem .8rem; }
+.expressive-code { border: 1px solid var(--sl-color-gray-5); border-radius: 6px; box-shadow: none; }
+.starlight-aside { border-radius: 6px; }
+.hero { padding-block: 3rem 2rem; }
+.hero h1 { max-width: 15ch; }
+.hero .tagline { max-width: 47rem; }
+.action.primary { border-radius: 4px; background: var(--sl-color-accent); border-color: var(--sl-color-accent); }
+.action.minimal { border-radius: 4px; }
+
+.workflow-grid { display: grid; grid-template-columns: minmax(15rem, .8fr) minmax(22rem, 1.4fr); gap: 2rem; align-items: start; }
+.workflow-steps { counter-reset: workflow; border-inline-end: 1px solid var(--sl-color-gray-5); padding-inline-end: 1.75rem; }
+.workflow-step { counter-increment: workflow; position: relative; padding: 0 0 2rem 3rem; }
+.workflow-step::before { content: counter(workflow); position: absolute; inset: 0 auto auto 0; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--sl-color-accent); color: white; font-weight: 700; }
+.workflow-step:not(:last-child)::after { content: ''; position: absolute; left: .85rem; top: 2rem; bottom: .25rem; border-left: 1px dashed var(--sl-color-gray-4); }
+.workflow-step h3 { margin: 0 0 .35rem; font-size: 1rem; }
+.workflow-step p { margin: 0; color: var(--sl-color-gray-2); font-size: .9rem; }
+.role-matrix { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--sl-color-gray-5); border-radius: 5px; overflow: hidden; margin-bottom: 1.5rem; }
+.role-matrix > div { padding: .8rem 1rem; }
+.role-matrix > div + div { border-inline-start: 1px solid var(--sl-color-gray-5); }
+.role-matrix strong { display: block; margin-bottom: .4rem; color: var(--sl-color-white); }
+.role-matrix span { display: block; font-size: .86rem; color: var(--sl-color-gray-2); }
+.api-shell { min-height: calc(100vh - var(--sl-nav-height)); border-top: 1px solid var(--sl-color-gray-5); }
+#api-reference { min-height: 75vh; }
+
+@media (max-width: 800px) {
+  :root { --sl-text-h1: 1.85rem; }
+  .workflow-grid { grid-template-columns: 1fr; }
+  .workflow-steps { border-inline-end: 0; border-bottom: 1px solid var(--sl-color-gray-5); padding-inline-end: 0; }
+  .role-matrix { grid-template-columns: 1fr; }
+  .role-matrix > div + div { border-inline-start: 0; border-top: 1px solid var(--sl-color-gray-5); }
+  .sl-markdown-content table { display: block; overflow-x: auto; }
+}

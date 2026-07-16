@@ -1,0 +1,35 @@
+---
+title: MAVULA Developer Docs
+description: Build regulated financial operations on MAVULA public APIs.
+template: splash
+hero:
+  tagline: Integrate institutional identity, controlled ledger operations, payment jobs and legacy batch workflows through versioned public contracts.
+  actions:
+    - text: Start with API v1
+      link: /v1/getting-started/quickstart/
+      icon: right-arrow
+      variant: primary
+    - text: Explore API reference
+      link: /v1/api/ledger-core/
+      icon: open-book
+      variant: minimal
+---
+
+## One platform, explicit ownership
+
+| Surface | Use it for | Contract owner |
+| --- | --- | --- |
+| **Identity Access** | OAuth 2.0, OpenID Connect and effective operator identity | `mavulahq/identity-access` |
+| **Ledger Core** | Accounts, maker-checker controls, financial configuration and projections | `mavulahq/ledger-core` |
+| **Workbench** | Payment jobs, operational status and legacy batch orchestration | `mavulahq/workbench` |
+
+All examples target API v1. Internal callbacks, health probes and observability endpoints are intentionally excluded from the public reference.
+
+## Choose a workflow
+
+- [Create and inspect an account](/developer-docs/v1/guides/account-setup/)
+- [Control an account lifecycle](/developer-docs/v1/guides/account-lifecycle/)
+- [Submit a reversible financial adjustment](/developer-docs/v1/guides/financial-adjustments/)
+- [Operate payment jobs](/developer-docs/v1/guides/payment-jobs/)
+- [Generate and deliver regulatory exports](/developer-docs/v1/guides/legacy-batches/)
+

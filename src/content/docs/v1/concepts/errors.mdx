@@ -1,0 +1,29 @@
+---
+title: Errors
+description: Interpret public API failures and choose a safe recovery action.
+---
+
+Error bodies expose a stable HTTP status and message. Use the HTTP status for control flow and retain the correlation ID for investigation.
+
+| Status | Category | Typical cause | Recovery |
+| --- | --- | --- | --- |
+| `400` | Invalid request | Missing field, malformed identifier, unsupported transition | Correct and submit with a new idempotency key |
+| `401` | Authentication | Missing, invalid or expired token | Obtain a valid token; do not replay credentials in logs |
+| `403` | Authorization | Missing permission, wrong role, self-approval | Use an authorized distinct principal |
+| `404` | Not found | Resource absent or outside tenant boundary | Verify tenant context and identifier |
+| `409` | Conflict | State changed or idempotency fingerprint differs | Read current state; do not retry blindly |
+| `429` | Rate limited | Request budget exceeded | Respect `Retry-After` |
+| `5xx` | Service failure | Temporary processing or dependency failure | Retry eligible requests with the same key |
+
+## Example
+
+```json
+{
+  "statusCode": 409,
+  "message": "idempotency key is already bound to a different request",
+  "error": "Conflict"
+}
+```
+
+Never expose access tokens, client secrets, personal data or full financial payloads in an issue. Supply timestamps, operation IDs, resource IDs and correlation IDs.
+

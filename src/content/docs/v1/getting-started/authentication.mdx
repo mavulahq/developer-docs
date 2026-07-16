@@ -1,0 +1,84 @@
+---
+title: Authentication
+description: Select and implement the correct OAuth 2.0 flow for operators and institutional services.
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Identity Access publishes OpenID Provider metadata at `/.well-known/openid-configuration` and signing keys at `/jwks`. Validate token issuer, audience, signature and expiry on every protected boundary.
+
+## Choose a grant
+
+| Grant | Principal | Use case |
+| --- | --- | --- |
+| Authorization code with PKCE | Human operator | Browser or native operator interface |
+| Client credentials | Institutional service | Backend-to-backend automation |
+| Refresh token | Existing operator session | Rotate access tokens without repeating sign-in |
+
+### Authorization code with PKCE
+
+Generate a random `code_verifier`, derive its SHA-256 `code_challenge`, then redirect the operator to `/auth`. The `state` and `nonce` values must be unique and verified on return.
+
+```text
+GET https://identity.mavula.dev/auth
+  ?response_type=code
+  &client_id=operator-console
+  &redirect_uri=https%3A%2F%2Fops.example.com%2Fcallback
+  &scope=openid%20profile%20finance.read%20finance.write
+  &code_challenge=BASE64URL_SHA256_VERIFIER
+  &code_challenge_method=S256
+  &state=RANDOM_STATE
+  &nonce=RANDOM_NONCE
+```
+
+Exchange the returned code once:
+
+```bash
+curl -sS -X POST https://identity.mavula.dev/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=authorization_code' \
+  --data-urlencode 'client_id=operator-console' \
+  --data-urlencode 'code=AUTHORIZATION_CODE' \
+  --data-urlencode 'redirect_uri=https://ops.example.com/callback' \
+  --data-urlencode 'code_verifier=ORIGINAL_CODE_VERIFIER'
+```
+
+### Client credentials
+
+<Tabs>
+  <TabItem label="curl">
+    ```bash
+    curl -sS -X POST https://identity.mavula.dev/token \
+      -H 'Content-Type: application/x-www-form-urlencoded' \
+      --data-urlencode 'grant_type=client_credentials' \
+      --data-urlencode 'client_id=YOUR_CLIENT_ID' \
+      --data-urlencode 'client_secret=YOUR_CLIENT_SECRET' \
+      --data-urlencode 'scope=internal.worker'
+    ```
+  </TabItem>
+  <TabItem label="TypeScript">
+    ```ts
+    const body = new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: process.env.MAVULA_CLIENT_ID!,
+      client_secret: process.env.MAVULA_CLIENT_SECRET!,
+      scope: 'internal.worker',
+    });
+    const response = await fetch('https://identity.mavula.dev/token', {
+      method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body,
+    });
+    if (!response.ok) throw new Error(`token request failed: ${response.status}`);
+    const tokens = await response.json();
+    ```
+  </TabItem>
+</Tabs>
+
+Client credentials represent an approved internal worker identity. They do not replace operator authorization for Ledger Core or compliance operations.
+
+## Refresh and revoke
+
+Refresh tokens are rotated. Persist the replacement atomically and discard the previous value. Send tokens that must no longer be used to `/token/revocation`.
+
+<Aside type="note" title="Effective authorization">
+Scopes constrain the token. Roles and permissions returned by `/api/v1/me` determine what the current principal can perform inside its tenant.
+</Aside>

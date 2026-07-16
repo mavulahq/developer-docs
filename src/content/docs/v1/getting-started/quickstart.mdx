@@ -1,0 +1,62 @@
+---
+title: Quickstart
+description: Exchange an operator authorization code, create an account and read its balance.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+This flow uses OAuth 2.0 authorization code with PKCE for an institutional operator. Complete the authorization redirect described in [Authentication](../authentication/) before exchanging the code.
+
+<Steps>
+
+1. **Exchange the authorization code**
+
+   ```bash
+   curl -sS -X POST https://identity.mavula.dev/token \
+     -H 'Content-Type: application/x-www-form-urlencoded' \
+     --data-urlencode 'grant_type=authorization_code' \
+     --data-urlencode 'client_id=operator-console' \
+     --data-urlencode 'code=AUTHORIZATION_CODE' \
+     --data-urlencode 'redirect_uri=https://ops.example.com/callback' \
+     --data-urlencode 'code_verifier=ORIGINAL_CODE_VERIFIER'
+   ```
+
+2. **Inspect the effective identity**
+
+   ```bash
+   curl -sS https://identity.mavula.dev/api/v1/me \
+     -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
+   ```
+
+   Confirm the returned tenant, roles and permissions before sending financial commands.
+
+3. **Create an account**
+
+   ```bash
+   curl -sS -X POST https://ledger.mavula.dev/api/accounts \
+     -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
+     -H 'Content-Type: application/json' \
+     -H 'Idempotency-Key: 76b05d81-c975-4daf-b054-72b2eb3a749a' \
+     -H 'X-Correlation-ID: 406d8359-a53a-4d2a-a908-628798ece3b3' \
+     -d '{"customer_id":"customer_001","product_id":"current_account_mzn","name":"Operating account","currency":"MZN"}'
+   ```
+
+4. **Read the balance**
+
+   ```bash
+   curl -sS https://ledger.mavula.dev/api/accounts/ACCOUNT_ID/balance \
+     -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
+     -H 'X-Correlation-ID: 406d8359-a53a-4d2a-a908-628798ece3b3'
+   ```
+
+</Steps>
+
+<Aside type="caution" title="Token handling">
+Keep access tokens in memory, rotate refresh tokens atomically and never place tokens or authorization codes in source control, logs or support requests.
+</Aside>
+
+## Next steps
+
+- [Configure operator roles](../roles-permissions/)
+- [Apply retry and idempotency rules](../request-reliability/)
+- [Control account lifecycle changes](../../guides/account-lifecycle/)
