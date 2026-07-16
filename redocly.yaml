@@ -3,5 +3,5 @@ extends:
 rules:
   no-server-example.com: off
   operation-description: off
-  operation-summary: off
+  operation-summary: error
   security-defined: error

@@ -1,5 +1,9 @@
 node_modules/
 dist/
+.astro/
+.playwright/
+playwright-report/
+test-results/
 .redocly/
 *.log
 .env

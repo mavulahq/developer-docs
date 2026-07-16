@@ -16,5 +16,26 @@ for (const contract of lock.contracts) {
       throw new Error(`${contract.file} exposes non-public route ${route}`);
     }
   }
+  const operationIds = [...source.matchAll(/\boperationId:\s*([A-Za-z][A-Za-z0-9]*)/g)].map((match) => match[1]);
+  const summaries = [...source.matchAll(/\bsummary:\s*[^\n,}]+/g)];
+  if (operationIds.length === 0 || summaries.length < operationIds.length) {
+    throw new Error(`${contract.file} must describe every public operation`);
+  }
+  if (contract.file !== 'identity-access.public.v1.yaml') {
+    const permissionDeclarations = [...source.matchAll(/x-mavula-permissions:/g)].length;
+    if (permissionDeclarations < operationIds.length) {
+      throw new Error(`${contract.file} must declare permissions for every public operation`);
+    }
+  }
 }
-console.log('developer-docs owner contract digests and public boundaries are valid');
+
+const guideFiles = [
+  'src/content/docs/v1/getting-started/quickstart.mdx',
+  'src/content/docs/v1/getting-started/authentication.mdx',
+  'src/content/docs/v1/guides/account-lifecycle.mdx',
+  'src/content/docs/v1/guides/financial-adjustments.mdx',
+  'src/content/docs/v1/guides/payment-jobs.mdx',
+  'src/content/docs/v1/guides/legacy-batches.mdx',
+];
+for (const file of guideFiles) readFileSync(file, 'utf8');
+console.log('developer-docs owner digests, public boundaries and use-case coverage are valid');
