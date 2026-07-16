@@ -1,0 +1,36 @@
+---
+title: Configure products, rules and workflows
+description: Manage tenant financial configuration through versioned public resources.
+---
+
+Configuration APIs are tenant-scoped. Apply changes first in a non-production tenant and retain the correlation ID used for each mutation.
+
+## Generate jurisdiction defaults
+
+```bash
+curl -sS -X POST https://ledger.mavula.io/api/products/config/generate \
+  -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -H 'Idempotency-Key: 4cb0de72-2805-4490-8e47-df403c118275' \
+  -d '{"jurisdiction":"MZ"}'
+```
+
+## Configuration surfaces
+
+| Resource | Operations | Use |
+| --- | --- | --- |
+| Products | list, read, upsert | Define financial product behavior |
+| Product rules | list, create, update, delete, seed defaults | Apply ordered conditions and actions |
+| Entity schemas | list, create, import, export, preset | Define validated business data shapes |
+| Workflows | list, create, read, execute, preset | Compose controlled actions around named triggers |
+
+Rules include a condition, action, priority, enabled state and optional applicability list. Workflow steps execute in their declared order and accept an explicit context object.
+
+## Change discipline
+
+1. Export or read the current configuration.
+2. Validate the proposed change against the OpenAPI schema.
+3. Use a unique idempotency and correlation identifier.
+4. Read the resulting resource and version.
+5. Verify downstream projections before exposing the change operationally.
+

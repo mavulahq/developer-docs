@@ -1,0 +1,31 @@
+---
+title: Roles and permissions
+description: Map institutional duties to the minimum public API permissions.
+---
+
+Authorization follows least privilege and separation of duties. A role grants a bounded set of permissions; an API operation declares its required permission in `x-mavula-permissions` in the public OpenAPI contract.
+
+## Minimum operator roles
+
+| Role | Typical responsibility | Core permissions |
+| --- | --- | --- |
+| `operations_viewer` | Read operational and financial state | `finance.read` |
+| `operations_maker` | Submit controlled changes | `finance.read`, `finance.write` |
+| `operations_checker` | Approve or reject controlled changes | `finance.read`, `finance.approve` |
+| `compliance_officer` | Review and generate regulated outputs | `finance.read`, `compliance.read`, `compliance.write` |
+| `platform_administrator` | Manage tenant configuration and access | Explicit administrative permissions only |
+| `service_integration` | Execute a specific machine workflow | Narrow scopes for one integration |
+
+## Maker-checker rule
+
+The principal that submits an account lifecycle or financial adjustment request cannot approve the same request. Approval must use a different authenticated operator with `finance.approve`.
+
+## Verify access at runtime
+
+```bash
+curl -sS https://identity.mavula.io/api/v1/me \
+  -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
+```
+
+Treat a `403` as an authorization decision. Do not retry it automatically or exchange it for a more privileged service credential.
+

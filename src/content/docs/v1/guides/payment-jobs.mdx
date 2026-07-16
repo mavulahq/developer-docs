@@ -1,0 +1,38 @@
+---
+title: Operate payment jobs
+description: Submit external payment processing work and follow its asynchronous status.
+---
+
+Workbench accepts payment jobs and delegates durable process state to the settlement domain. Job acceptance is not settlement completion.
+
+## Submit a job
+
+```bash
+curl -sS -X POST https://workbench.mavula.io/api/jobs \
+  -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -H 'Idempotency-Key: bfe8b575-2137-4a86-a210-cc2182130aed' \
+  -H 'X-Correlation-ID: fd662f62-19c7-4f92-941f-64667437e6f9' \
+  -d '{"type":"PAYMENT_PROCESS","payload":{"tenant_id":"tenant_001","idempotency_key":"payment_001","correlation_id":"fd662f62-19c7-4f92-941f-64667437e6f9","rail":"BANK_TRANSFER","amount":"2500.00","payer":{"account_id":"account_001"},"payee":{"bank_account":"000123456789"}}}'
+```
+
+Persist the returned job identifier and poll the status resource:
+
+```bash
+curl -sS https://workbench.mavula.io/api/jobs/JOB_ID \
+  -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
+```
+
+## Operational states
+
+| State | Meaning | Client action |
+| --- | --- | --- |
+| Accepted or queued | Work is durable and awaiting execution | Poll with bounded backoff |
+| Active | Provider interaction or reconciliation is in progress | Continue polling |
+| Completed | Process reached its terminal successful state | Reconcile the resulting domain state |
+| Failed | Retry policy was exhausted or input cannot proceed | Read failure details; correct before resubmission |
+| Expired | Process exceeded its permitted execution window | Investigate provider state before retrying |
+| Compensation required | Automated completion is unsafe | Escalate to an authorized operator |
+
+Do not infer a ledger posting from a payment process state. Ledger Core remains the owner of financial postings and invariants.
+

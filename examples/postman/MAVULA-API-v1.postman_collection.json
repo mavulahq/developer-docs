@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "MAVULA API v1",
+    "description": "Public identity, ledger and workbench integration workflows.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "identity_base_url", "value": "https://identity.mavula.io" },
+    { "key": "ledger_base_url", "value": "https://ledger.mavula.io" },
+    { "key": "workbench_base_url", "value": "https://workbench.mavula.io" },
+    { "key": "access_token", "value": "" },
+    { "key": "account_id", "value": "" },
+    { "key": "request_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Identity",
+      "item": [
+        {
+          "name": "Effective identity",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{identity_base_url}}/api/v1/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Create account",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{$guid}}" },
+              { "key": "X-Correlation-ID", "value": "{{$guid}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"customer_id\": \"customer_001\",\n  \"product_id\": \"current_account_mzn\",\n  \"name\": \"Operating account\",\n  \"currency\": \"MZN\"\n}" },
+            "url": "{{ledger_base_url}}/api/accounts"
+          }
+        },
+        {
+          "name": "Submit freeze request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{$guid}}" },
+              { "key": "X-Correlation-ID", "value": "{{$guid}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"transition\": \"FREEZE\",\n  \"reason\": \"Suspected fraud\"\n}" },
+            "url": "{{ledger_base_url}}/api/accounts/{{account_id}}/status-transitions"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workbench",
+      "item": [
+        {
+          "name": "Read platform status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{workbench_base_url}}/api/status"
+          }
+        }
+      ]
+    }
+  ]
+}

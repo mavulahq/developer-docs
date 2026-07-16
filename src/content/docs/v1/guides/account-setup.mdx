@@ -1,0 +1,42 @@
+---
+title: Create and inspect an account
+description: Create a tenant-scoped account and read its balance and statement.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Required permission: `finance.write` to create, `finance.read` to inspect.
+
+<Steps>
+
+1. **Create the account**
+
+   ```bash
+   curl -sS -X POST https://ledger.mavula.io/api/accounts \
+     -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
+     -H 'Content-Type: application/json' \
+     -H 'Idempotency-Key: 56a1f534-9054-4dcf-82cb-55ebc102da18' \
+     -H 'X-Correlation-ID: 9ab719e7-7aa6-4cc5-9d03-01eef511262b' \
+     -d '{"customer_id":"customer_001","product_id":"current_account_mzn","name":"Operating account","currency":"MZN"}'
+   ```
+
+2. **Read the current balance**
+
+   ```bash
+   curl -sS https://ledger.mavula.io/api/accounts/ACCOUNT_ID/balance \
+     -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
+   ```
+
+3. **Page through the statement**
+
+   ```bash
+   curl -sS 'https://ledger.mavula.io/api/accounts/ACCOUNT_ID/statement?limit=100' \
+     -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
+   ```
+
+   When `next_cursor` is present, send it as `cursor` on the next request. A statement entry includes its direction, amount, currency, resulting balance and posting timestamp.
+
+</Steps>
+
+Monetary amounts are decimal strings. Never parse them with binary floating-point arithmetic.
+
