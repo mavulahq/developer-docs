@@ -1,0 +1,13 @@
+name: Required CI
+on:
+  pull_request: {}
+  push: { branches: [main] }
+permissions: { contents: read }
+jobs:
+  required:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: 22.22.3 }
+      - run: node scripts/guardian.mjs
