@@ -5,19 +5,19 @@
       "file": "identity-access.public.v1.yaml",
       "owner": "mavulahq/identity-access",
       "source": "contracts/openapi/identity-access.public.v1.yaml",
-      "sha256": "a126f53455b05bd8377fa12b81f814ae5d677acbbb0e8df33a706a5a0cf60a38"
+      "sha256": "2652296a97abed2726df27f23348101fe700cffee84fe4294aee524c957db30a"
     },
     {
       "file": "ledger-core.public.v1.yaml",
       "owner": "mavulahq/ledger-core",
       "source": "contracts/openapi/ledger-core.public.v1.yaml",
-      "sha256": "115cda1bff1aaea6a7aaad81577a0918e4ced2ec222cefc4081433a08778f2a1"
+      "sha256": "dcae9e81479b62ac5641eb20a8a231628bfab9fc6edec3477b1e128a7acdc3e7"
     },
     {
       "file": "workbench.public.v1.yaml",
       "owner": "mavulahq/workbench",
       "source": "contracts/openapi/workbench.public.v1.yaml",
-      "sha256": "1b6e8a3fdb3c882c87932e6966612ea71706902adabd5f6ddd3bf356762e95d9"
+      "sha256": "14053111b3b8b94a5f0fbd9ead1d38b0f6fc491e1accace4568a87e2e135abd8"
     }
   ]
 }

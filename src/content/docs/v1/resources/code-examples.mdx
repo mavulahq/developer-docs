@@ -19,7 +19,7 @@ The guides include executable fragments for curl, TypeScript, Python, Java and G
 
 ## Postman
 
-The repository includes a versioned collection at [`examples/postman/MAVULA-API-v1.postman_collection.json`](https://github.com/mavulahq/developer-docs/blob/main/examples/postman/MAVULA-API-v1.postman_collection.json). Define `identity_base_url`, `ledger_base_url`, `workbench_base_url`, `client_id`, `client_secret` and `access_token` in a private Postman environment.
+The repository includes a versioned collection at [`examples/postman/MAVULA-API-v1.postman_collection.json`](https://github.com/mavulahq/developer-docs/blob/main/examples/postman/MAVULA-API-v1.postman_collection.json). Define `identity_base_url`, `ledger_base_url`, `workbench_base_url`, `client_id`, `client_assertion` and `access_token` in a private Postman environment. Generate `client_assertion` outside the collection from the registered private RSA key; never store the key in Postman.
 
 ## Reference contracts
 
@@ -28,4 +28,3 @@ The repository includes a versioned collection at [`examples/postman/MAVULA-API-
 - [Workbench OpenAPI](/developer-docs/openapi/workbench.public.v1.yaml)
 
 Use these contracts to generate clients in your preferred language. Pin the downloaded contract digest in regulated build pipelines.
-

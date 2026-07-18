@@ -9,12 +9,13 @@ Authorization follows least privilege and separation of duties. A role grants a 
 
 | Role | Typical responsibility | Core permissions |
 | --- | --- | --- |
-| `operations_viewer` | Read operational and financial state | `finance.read` |
+| `institution_admin` | Manage institutional identity and configuration | `identity.admin`, `configuration.write` |
 | `operations_maker` | Submit controlled changes | `finance.read`, `finance.write` |
 | `operations_checker` | Approve or reject controlled changes | `finance.read`, `finance.approve` |
 | `compliance_officer` | Review and generate regulated outputs | `finance.read`, `compliance.manage` |
-| `platform_administrator` | Manage tenant configuration and access | Explicit administrative permissions only |
-| `service_integration` | Execute a specific machine workflow | Narrow scopes for one integration |
+| `auditor` | Read audit and financial evidence | `audit.read`, `finance.read` |
+
+`service_integration` is an OAuth client class, not an operator role. Each machine client receives only the scopes required by one integration and authenticates with `private_key_jwt`.
 
 ## Maker-checker rule
 
@@ -23,7 +24,7 @@ The principal that submits an account lifecycle or financial adjustment request 
 ## Verify access at runtime
 
 ```bash
-curl -sS https://identity.mavula.dev/api/v1/me \
+curl -sS https://identity.mavula.io/api/v1/me \
   -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
 ```
 

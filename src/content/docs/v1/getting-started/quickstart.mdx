@@ -12,7 +12,7 @@ This flow uses OAuth 2.0 authorization code with PKCE for an institutional opera
 1. **Exchange the authorization code**
 
    ```bash
-   curl -sS -X POST https://identity.mavula.dev/token \
+   curl -sS -X POST https://identity.mavula.io/token \
      -H 'Content-Type: application/x-www-form-urlencoded' \
      --data-urlencode 'grant_type=authorization_code' \
      --data-urlencode 'client_id=operator-console' \
@@ -24,7 +24,7 @@ This flow uses OAuth 2.0 authorization code with PKCE for an institutional opera
 2. **Inspect the effective identity**
 
    ```bash
-   curl -sS https://identity.mavula.dev/api/v1/me \
+   curl -sS https://identity.mavula.io/api/v1/me \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN"
    ```
 
@@ -33,7 +33,7 @@ This flow uses OAuth 2.0 authorization code with PKCE for an institutional opera
 3. **Create an account**
 
    ```bash
-   curl -sS -X POST https://ledger.mavula.dev/api/accounts \
+   curl -sS -X POST https://ledger.mavula.io/api/accounts \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
      -H 'Content-Type: application/json' \
      -H 'Idempotency-Key: 76b05d81-c975-4daf-b054-72b2eb3a749a' \
@@ -44,7 +44,7 @@ This flow uses OAuth 2.0 authorization code with PKCE for an institutional opera
 4. **Read the balance**
 
    ```bash
-   curl -sS https://ledger.mavula.dev/api/accounts/ACCOUNT_ID/balance \
+   curl -sS https://ledger.mavula.io/api/accounts/ACCOUNT_ID/balance \
      -H "Authorization: Bearer $MAVULA_ACCESS_TOKEN" \
      -H 'X-Correlation-ID: 406d8359-a53a-4d2a-a908-628798ece3b3'
    ```
