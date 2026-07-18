@@ -46,8 +46,8 @@ test('published examples use canonical hosts and contract payload names', () => 
     'examples/postman/MAVULA-API-v1.postman_collection.json',
   ];
   const content = files.map((file) => readFileSync(file, 'utf8')).join('\n');
-  assert.doesNotMatch(content, /https:\/\/(?:identity|ledger|workbench)\.mavula\.io/);
-  for (const expectation of ['mavula.dev', 'compliance.manage', 'valueMinor', 'period_from', 'authority_reference']) {
+  assert.doesNotMatch(content, /https:\/\/(?:identity|ledger|workbench)\.mavula\.dev/);
+  for (const expectation of ['mavula.io', 'compliance.manage', 'valueMinor', 'period_from', 'authority_reference']) {
     assert.match(content, new RegExp(expectation, 'i'));
   }
 });

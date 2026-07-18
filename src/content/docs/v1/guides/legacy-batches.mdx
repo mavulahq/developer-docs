@@ -14,7 +14,7 @@ Workbench orchestrates auditable batch requests. Legacy imports are staged and v
 1. **Request the export**
 
    ```bash
-   curl -sS -X POST https://workbench.mavula.dev/api/regulatory-exports \
+   curl -sS -X POST https://workbench.mavula.io/api/regulatory-exports \
      -H "Authorization: Bearer $COMPLIANCE_TOKEN" \
      -H 'Content-Type: application/json' \
      -H 'Idempotency-Key: 0e03ef93-09e0-413f-b49a-e59f93fa881f' \
@@ -28,12 +28,12 @@ Workbench orchestrates auditable batch requests. Legacy imports are staged and v
 
 3. **Download the artifact**
 
-   Use `GET /api/legacy-batches/{batchId}/artifact` only after the batch reports a completed state. Verify the response media type and checksum before delivery.
+   Use `GET /api/legacy-batches/{batchId}/artifact` after an export reaches `GENERATED`. Verify the response media type and checksum before delivery.
 
 4. **Record authority delivery**
 
    ```bash
-   curl -sS -X POST https://workbench.mavula.dev/api/regulatory-exports/BATCH_ID/delivery \
+   curl -sS -X POST https://workbench.mavula.io/api/regulatory-exports/BATCH_ID/delivery \
      -H "Authorization: Bearer $COMPLIANCE_TOKEN" \
      -H 'Content-Type: application/json' \
      -H 'Idempotency-Key: 076a329b-84f5-4f58-99ef-04ac14f3a343' \
@@ -45,6 +45,20 @@ Workbench orchestrates auditable batch requests. Legacy imports are staged and v
 ## Validate a legacy import
 
 Submit the file metadata and import parameters to `POST /api/legacy-imports`. Inspect deterministic validation failures at `GET /api/legacy-batches/{batchId}/rejections`.
+
+## Receipt states
+
+| State | Export | Import | Meaning |
+| --- | --- | --- | --- |
+| `QUEUED` | Yes | Yes | Durable receipt created; processing has not started |
+| `PROCESSING` | Yes | Yes | A worker owns a fenced lease |
+| `GENERATED` | Yes | No | Export artifact is available |
+| `VALIDATED` | No | Yes | Import artifact passed validation |
+| `REJECTED` | Yes | Yes | Deterministic business or format validation failed |
+| `FAILED` | Yes | Yes | Processing exhausted its retry budget |
+| `DELIVERED` | Yes | No | Authority delivery evidence was recorded idempotently |
+
+Retries use the same batch receipt. Lease identifiers, request digests and delivery digests are internal and are never returned by the public API.
 
 <Aside type="caution" title="No financial mutation">
 Validation acceptance does not post transactions, create accounts or alter ledger balances. A separate approved migration process is required for financial effects.
