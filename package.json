@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "astro dev",
     "preview": "astro preview",
-    "guardian:check": "node scripts/guardian.mjs",
+    "guardian:check": "node scripts/guardian.mjs && node --test scripts/check-agent-policy.test.mjs",
     "contracts:check": "node scripts/check-contracts.mjs",
     "build": "node scripts/build-docs.mjs",
     "test": "node --test test/*.test.mjs",
