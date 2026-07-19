@@ -54,8 +54,8 @@ curl -sS -X POST https://identity.mavula.io/token \
       --data-urlencode 'client_id=YOUR_CLIENT_ID' \
       --data-urlencode 'client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer' \
       --data-urlencode "client_assertion=$CLIENT_ASSERTION" \
-      --data-urlencode 'scope=internal.worker' \
-      --data-urlencode 'resource=urn:mavula:workbench' \
+      --data-urlencode 'scope=finance.read' \
+      --data-urlencode 'resource=urn:mavula:ledger-core' \
       --data-urlencode 'tenant_id=YOUR_TENANT_ID'
     ```
   </TabItem>
@@ -82,8 +82,8 @@ curl -sS -X POST https://identity.mavula.io/token \
       client_id: clientId,
       client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
       client_assertion: clientAssertion,
-      scope: 'internal.worker',
-      resource: 'urn:mavula:workbench',
+      scope: 'finance.read',
+      resource: 'urn:mavula:ledger-core',
       tenant_id: process.env.MAVULA_TENANT_ID!,
     });
     const response = await fetch(tokenEndpoint, {
@@ -95,7 +95,7 @@ curl -sS -X POST https://identity.mavula.io/token \
   </TabItem>
 </Tabs>
 
-Client credentials represent an approved internal worker identity. Identity Access accepts only registered public RSA keys with `private_key_jwt` and `PS256`; assertions must be short-lived and use a unique `jti`. Service credentials do not replace operator authorization for Ledger Core or compliance operations.
+Client credentials represent an approved institutional service identity. Request only public integrator scopes such as `finance.read`. `internal.worker` is not a public integrator scope and must not appear in integrator token requests. Identity Access accepts only registered public RSA keys with `private_key_jwt` and `PS256`; assertions must be short-lived and use a unique `jti`. Service credentials do not replace operator authorization for Ledger Core or compliance operations.
 
 ## Refresh and revoke
 

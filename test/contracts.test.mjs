@@ -32,9 +32,14 @@ test('portal covers identity, financial controls, payments and reliability', () 
     'src/content/docs/v1/concepts/idempotency.mdx',
   ];
   const content = files.map((file) => readFileSync(file, 'utf8')).join('\n');
-  for (const expectation of ['internal.worker', 'operations_maker', 'REVERSAL', 'PAYMENT_CAPTURE', 'idempotency key']) {
+  for (const expectation of ['finance.read', 'operations_maker', 'REVERSAL', 'PAYMENT_CAPTURE', 'idempotency key']) {
     assert.match(content, new RegExp(expectation, 'i'));
   }
+  assert.match(content, /internal\.worker[`']?\s+is not a public integrator scope/i);
+  assert.doesNotMatch(
+    readFileSync('openapi/identity-access.public.v1.yaml', 'utf8'),
+    /internal\.worker/,
+  );
 });
 
 test('published examples use canonical hosts and contract payload names', () => {

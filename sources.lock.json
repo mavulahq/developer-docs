@@ -5,7 +5,7 @@
       "file": "identity-access.public.v1.yaml",
       "owner": "mavulahq/identity-access",
       "source": "contracts/openapi/identity-access.public.v1.yaml",
-      "sha256": "2652296a97abed2726df27f23348101fe700cffee84fe4294aee524c957db30a"
+      "sha256": "f97f6bc9f21778f86e66bdb16843c9d58fff907ea61bf0f2e7d61e0417f247c8"
     },
     {
       "file": "ledger-core.public.v1.yaml",
