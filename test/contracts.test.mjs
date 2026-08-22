@@ -9,7 +9,7 @@ test('all published operations use unique operationId values', () => {
     operationIds.push(...[...source.matchAll(/^\s+operationId: (\S+)$/gm)].map((match) => match[1]));
   }
   assert.equal(new Set(operationIds).size, operationIds.length);
-  assert.equal(operationIds.length, 57);
+  assert.equal(operationIds.length, 56);
 });
 
 test('legacy batch guide preserves validation-only and durable recovery boundaries', () => {

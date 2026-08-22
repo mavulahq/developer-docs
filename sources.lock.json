@@ -11,7 +11,7 @@
       "file": "ledger-core.public.v1.yaml",
       "owner": "mavulahq/ledger-core",
       "source": "contracts/openapi/ledger-core.public.v1.yaml",
-      "sha256": "115cda1bff1aaea6a7aaad81577a0918e4ced2ec222cefc4081433a08778f2a1"
+      "sha256": "87d95297f6b2cec9d47bfbdad9665896a3249063dae558b5269d16d89919818b"
     },
     {
       "file": "workbench.public.v1.yaml",
