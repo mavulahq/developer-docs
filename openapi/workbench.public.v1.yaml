@@ -24,7 +24,11 @@ paths:
     post:
       operationId: createJob
       summary: Submit a payment job
-      description: Submit tenant-scoped payment work. The tenant is always derived from the access token.
+      description: >
+        Submit tenant-scoped payment work. The tenant is always derived from the access token.
+        PAYMENT_CAPTURE, PAYMENT_DISBURSEMENT, and PAYMENT_RECONCILIATION require workbench.jobs.write.
+        PAYMENT_SETTLEMENT is a privileged override and requires finance.approve or internal.worker.
+        Internal job types are not accepted on this public endpoint.
       tags: [Jobs]
       x-mavula-permissions: [workbench.jobs.write]
       requestBody:
@@ -56,7 +60,9 @@ paths:
     get:
       operationId: getJob
       summary: Read job status
-      description: Read current status, attempts, result, and final failure details for a tenant-scoped job.
+      description: >
+        Read current status, attempts, result, and final failure details for a job that belongs
+        to the authenticated tenant. Unknown or cross-tenant job IDs return 404.
       tags: [Jobs]
       x-mavula-permissions: [workbench.read]
       parameters:
